@@ -37,6 +37,8 @@ public class Transfer {
 
     public void TransferOperation_Direct(Account sender, Account receiver) {
         Transaction transaction = new Transaction(TransactionType.TRANSFER, this.amount, this.currencies);
+        sender.setTotalBalance(sender.getTotalBalance() - this.amount);
+        receiver.setTotalBalance(receiver.getTotalBalance() + this.amount);
         sender.getAccountTransactions().add(transaction);
         receiver.getAccountTransactions().add(transaction);
     }

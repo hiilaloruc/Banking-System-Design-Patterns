@@ -1,27 +1,32 @@
 import Classes.*;
 import Classes.Enum.*;
-import Classes.Report.AccountReport;
-import Classes.Report.BankReport;
-import Classes.Report.UserReport;
 
 public class Main {
     public static void main(String[] args) {
 
         Bank BNP = new Bank("BNP");
+        Bank QNB = new Bank("QNB");
+
         Users Alex = BNP.CreateUser("Alex", 6220928, "contact@Alex.com");
         Users Hilal = BNP.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
 
         Account HilalAccount = Hilal.CreateAccount(2000.0, Currencies.PLN);
-        Account AlexAccount = Alex.CreateAccount(500.0, Currencies.PLN);
+        Account AlexAccount = Alex.CreateAccount(3000.0, Currencies.PLN);
 
-        UserReport  Hilal_UserReport = new UserReport(Hilal); //user report test
-        System.out.println(Hilal_UserReport.getReportContent());
+        // Chain Of Responsibility Usage
+        var transfer = new Transfer(1000,Currencies.PLN,AlexAccount,HilalAccount);
+        VerificationParameter issamebankParameter = new VerificationParameter.isInSameBank();
+        VerificationParameter currencyParameter = new VerificationParameter.currencyVerifier();
+        VerificationParameter amountParameter = new VerificationParameter.amountVerifier();
 
-        AccountReport Alex_AccountReport = new AccountReport(AlexAccount); //account report test
-        System.out.println(Alex_AccountReport.getReportContent());
+        issamebankParameter.SetNextVerificator(currencyParameter);
+        currencyParameter.SetNextVerificator(amountParameter);
 
-        BankReport BNP_BankReport = new BankReport(BNP); //bank report test
-        System.out.println(BNP_BankReport.getReportContent());
+        System.out.println("BEFORE: \nBalance of Hilal: "+ HilalAccount.getTotalBalance()+" \nBalance of Alex: "+ AlexAccount.getTotalBalance());
+        issamebankParameter.ProcessVerification(transfer); // Triggers Operation
+        System.out.println("AFTER: \nBalance of Hilal: "+ HilalAccount.getTotalBalance()+" \nBalance of Alex: "+ AlexAccount.getTotalBalance());
+
+
 
     }
 }
