@@ -1,27 +1,28 @@
 import Classes.*;
 import Classes.Enum.*;
+import Classes.Report.AccountReport;
+import Classes.Report.BankReport;
+import Classes.Report.UserReport;
 
 public class Main {
     public static void main(String[] args) {
 
         Bank BNP = new Bank("BNP");
-        Bank QNB = new Bank("QNB");
-        Users ibrahim = BNP.CreateUser("bob", 6220928, "contact@ibrahimcherri.com");
-        Users Hilal = QNB.CreateUser("hilal", 6258741, "hilaloruc@gmail.com");
+
+        Users Alex = BNP.CreateUser("Alex", 6220928, "contact@Alex.com");
+        Users Hilal = BNP.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
+
         Account HilalAccount = Hilal.CreateAccount(2000.0, Currencies.PLN);
-        Account ibrahimaccount = ibrahim.CreateAccount(500.0, Currencies.PLN);
-        System.out.println("-------BEFORE--------");
-        System.out.println(HilalAccount);
-        System.out.println(ibrahimaccount);
-        Transfer transfer = new Transfer(1000.0, Currencies.PLN, ibrahimaccount, HilalAccount);
-        VerificationParameter issamebankParameter = new isInSameBank();
-        VerificationParameter currencyParameter = new currencyVerifier();
-        VerificationParameter amountParameter = new amountVerifier();
-        issamebankParameter.SetNextVerificator(currencyParameter);
-        currencyParameter.SetNextVerificator(amountParameter);
-        issamebankParameter.ProcessVerification(transfer);
-        System.out.println("-------AFTER TRANSFER OPERATION---------");
-        System.out.println(HilalAccount);
-        System.out.println(ibrahimaccount);
+        Account AlexAccount = Alex.CreateAccount(500.0, Currencies.PLN);
+
+        UserReport  Hilal_UserReport = new UserReport(Hilal); //user report test
+        System.out.println(Hilal_UserReport.getReportContent());
+
+        AccountReport Alex_AccountReport = new AccountReport(AlexAccount); //account report test
+        System.out.println(Alex_AccountReport.getReportContent());
+
+        BankReport BNP_BankReport = new BankReport(BNP); //bank report test
+        System.out.println(BNP_BankReport.getReportContent());
+
     }
 }
