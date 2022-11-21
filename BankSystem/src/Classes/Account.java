@@ -1,5 +1,7 @@
 package Classes;
 import java.util.ArrayList;
+import java.util.Iterator;
+
 import Classes.Enum.Currencies;
 import Classes.Enum.TransactionStatus;
 import Classes.Enum.TransactionType;
@@ -80,7 +82,78 @@ public class Account {
 
         this.accountTransactions.add(transaction);
     }
+    public void Transfer(double amount, Currencies currencies, Account recipientAccount) {
+        Transaction transaction;
+        if (this.isInSameBank(recipientAccount)) {
+            transaction = new Transaction(TransactionType.TRANSFER, amount, currencies);
+            transaction.setStatus(this.TransferVerification(amount, currencies, recipientAccount));
+            this.accountTransactions.add(transaction);
+            recipientAccount.accountTransactions.add(transaction);
+        } else {
+            transaction = new Transaction(TransactionType.INTERBANKTRANSFER, amount, currencies);
+            transaction.setStatus(IBPA.InterbankPayment(this, recipientAccount, amount, currencies));
+            this.accountTransactions.add(transaction);
+            recipientAccount.accountTransactions.add(transaction);
+        }
 
+    }
+
+    private TransactionStatus TransferVerification(double amount, Currencies currencies, Account recipientAccount) {
+        if (this.currencies == currencies && currencies == recipientAccount.currencies && amount <= this.getTotalBalance()) {
+            this.setTotalBalance(this.getTotalBalance() - amount);
+            recipientAccount.setTotalBalance(recipientAccount.getTotalBalance() + amount);
+            return TransactionStatus.DONE;
+        } else {
+            return TransactionStatus.REJECTED;
+        }
+    }
+
+    public boolean isInSameBank(Account recipientAccount) {
+        Bank recipientBank = null;
+        Iterator var3 = IBPA.bankList.iterator();
+
+        Iterator var5;
+        label49:
+        while(var3.hasNext()) {
+            Bank bank = (Bank)var3.next();
+            var5 = bank.getUsers().iterator();
+
+            while(true) {
+                while(true) {
+                    if (!var5.hasNext()) {
+                        continue label49;
+                    }
+
+                    Users user = (Users)var5.next();
+                    Iterator var7 = user.getAccount().iterator();
+
+                    while(var7.hasNext()) {
+                        Account account = (Account)var7.next();
+                        if (account == recipientAccount) {
+                            recipientBank = bank;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        var3 = recipientBank.getUsers().iterator();
+
+        while(var3.hasNext()) {
+            Users user = (Users)var3.next();
+            var5 = user.getAccount().iterator();
+
+            while(var5.hasNext()) {
+                Account account = (Account)var5.next();
+                if (account == this) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
     public void AddDebit(double limit) {
         if (!this.isDebit) {
             Debit debit = new Debit(limit);
