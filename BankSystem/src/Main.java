@@ -7,22 +7,23 @@ import Classes.Report.UserReport;
 public class Main {
     public static void main(String[] args) {
 
+        IBPA ibpa = IBPA.getInstance(); //Singleton Usage
         Bank BNP = new Bank("BNP");
+        Bank QNB = new Bank("QNB");
+
+        ibpa.bankList.add(BNP);
+        ibpa.bankList.add(QNB);
 
         Users Alex = BNP.CreateUser("Alex", 6220928, "contact@Alex.com");
-        Users Hilal = BNP.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
+        Users Hilal = QNB.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
 
-        Account HilalAccount = Hilal.CreateAccount(2000.0, Currencies.PLN);
-        Account AlexAccount = Alex.CreateAccount(500.0, Currencies.PLN);
+        Account acc_Hilal = Hilal.CreateAccount(1200,Currencies.EUR);
+        Account acc_Alex = Alex.CreateAccount(600,Currencies.EUR);
 
-        UserReport  Hilal_UserReport = new UserReport(Hilal); //user report test
-        System.out.println(Hilal_UserReport.getReportContent());
+        System.out.println("BEFORE: \nBalance of Hilal: "+ acc_Hilal.getTotalBalance()+" \nBalance of Alex: "+ acc_Alex.getTotalBalance());
+        ibpa.InterbankPayment(acc_Hilal,acc_Alex,200,Currencies.EUR);
+        System.out.println("AFTER: \nBalance of Hilal: "+ acc_Hilal.getTotalBalance()+" \nBalance of Alex: "+ acc_Alex.getTotalBalance());
 
-        AccountReport Alex_AccountReport = new AccountReport(AlexAccount); //account report test
-        System.out.println(Alex_AccountReport.getReportContent());
-
-        BankReport BNP_BankReport = new BankReport(BNP); //bank report test
-        System.out.println(BNP_BankReport.getReportContent());
 
     }
 }
