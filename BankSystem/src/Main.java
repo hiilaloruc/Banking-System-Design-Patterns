@@ -6,23 +6,25 @@ import Classes.Report.UserReport;
 
 public class Main {
     public static void main(String[] args) {
+        //While Facade decreases the overall complexity of the application, it also helps to move unwanted dependencies to one place.
 
+
+        //BEFORE FACADE IMPLEMENTATION
+        /*
         Bank BNP = new Bank("BNP");
-
-        Users Alex = BNP.CreateUser("Alex", 6220928, "contact@Alex.com");
         Users Hilal = BNP.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
-
         Account HilalAccount = Hilal.CreateAccount(2000.0, Currencies.PLN);
-        Account AlexAccount = Alex.CreateAccount(500.0, Currencies.PLN);
+        Loans loan = new Loans("Loan for buying BMW.",100000.0,"2024-06-01",0.01);
+        HilalAccount.setLoan(loan);
+        HilalAccount.setActiveLoan(true);
+        System.out.println(HilalAccount);
+        */
 
-        UserReport  Hilal_UserReport = new UserReport(Hilal); //user report test
-        System.out.println(Hilal_UserReport.getReportContent());
-
-        AccountReport Alex_AccountReport = new AccountReport(AlexAccount); //account report test
-        System.out.println(Alex_AccountReport.getReportContent());
-
-        BankReport BNP_BankReport = new BankReport(BNP); //bank report test
-        System.out.println(BNP_BankReport.getReportContent());
+        //AFTER FACADE IMPLEMENTATION
+        Facade_Loan loanFacade = new Facade_Loan("BNP","hiilaloruc",053555555,
+                "hilaloruc@gmail.com",3000,Currencies.USD,"new job offer in Poland",
+                100000.0,"2024-06-01",0.01);
+        System.out.println(loanFacade.getAccount());
 
     }
 }
