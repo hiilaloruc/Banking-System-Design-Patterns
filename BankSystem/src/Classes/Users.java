@@ -16,13 +16,37 @@ public class Users {
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
-
+    /*
     public Account CreateAccount(double totalBalance, Currencies currencies) {
         Account account = new Account(totalBalance, currencies);
         this.account.add(account);
         return account;
     }
-
+    */
+    public Account createAccount_Standard( double totalBalance , Currencies currencies){
+        Account account = accountBuilder.startAccountBuilder_Standard(totalBalance , currencies)
+                .build();
+        this.account.add(account);
+        return account;
+    }
+    public Account createAccount_WithDebit( double totalBalance , Currencies currencies , double limit){
+        Account account = accountBuilder.startAccountBuilder_WithDebit(totalBalance , currencies,limit)
+                .build();
+        this.account.add(account);
+        return account;
+    }
+    public Account createAccount_WithCard( double totalBalance , Currencies currencies ){
+        Account account = accountBuilder.startAccountBuilder_WithCard(totalBalance , currencies)
+                .build();
+        this.account.add(account);
+        return account;
+    }
+    public Account createAccount_WithLoan( double totalBalance , Currencies currencies ,double amount , String details , String dueDate , double interestRate){
+        Account account = accountBuilder.startAccountBuilder_WithLoan(totalBalance,currencies,amount,details,dueDate,interestRate)
+                .build();
+        this.account.add(account);
+        return account;
+    }
     public int getUserId() {
         return this.userId;
     }
