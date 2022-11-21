@@ -8,7 +8,6 @@ public class Main {
     public static void main(String[] args) {
 
         Bank BNP = new Bank("BNP");
-
         Users Alex = BNP.CreateUser("Alex", 6220928, "contact@Alex.com");
         Users Hilal = BNP.CreateUser("Hilal", 6258741, "hilaloruc@gmail.com");
 
